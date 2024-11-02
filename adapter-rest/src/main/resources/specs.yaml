@@ -1,0 +1,337 @@
+openapi: 3.0.3
+info:
+  title: Public Transport Journey API
+  description: |
+    API for managing public transport journeys and real-time arrivals.
+    Allows users to create and manage their frequent journeys and get real-time arrival information.
+  version: 1.0.0
+  contact:
+    name: Public Transport API Team
+    email: api@example.com
+
+servers:
+  - url: http://localhost:8080
+    description: Development server
+  - url: https://api.publictransport.com
+    description: Production server
+
+security:
+  - bearerAuth: []
+
+paths:
+  /api/journeys:
+    post:
+      summary: Create a new journey
+      description: Creates a new journey with origin and destination locations
+      operationId: createJourney
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/JourneyCreate'
+      responses:
+        '201':
+          description: Journey created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Journey'
+        '400':
+          description: Invalid input
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+
+    get:
+      summary: Get all journeys for current user
+      description: Retrieves all journeys associated with the authenticated user
+      operationId: getCurrentUserJourneys
+      responses:
+        '200':
+          description: List of journeys
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Journey'
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+
+  /api/journeys/{journeyId}:
+    parameters:
+      - name: journeyId
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int64
+    get:
+      summary: Get journey by ID
+      operationId: getJourneyById
+      responses:
+        '200':
+          description: Journey found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Journey'
+        '404':
+          description: Journey not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    delete:
+      summary: Delete journey
+      operationId: deleteJourney
+      responses:
+        '204':
+          description: Journey deleted
+        '404':
+          description: Journey not found
+
+  /api/journeys/{journeyId}/trips:
+    parameters:
+      - name: journeyId
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int64
+    post:
+      summary: Add a trip to a journey
+      operationId: addTripToJourney
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TripCreate'
+      responses:
+        '201':
+          description: Trip added successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Trip'
+        '404':
+          description: Journey not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /api/journeys/{journeyId}/arrival-times:
+    parameters:
+      - name: journeyId
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int64
+    get:
+      summary: Get real-time arrival information for a journey
+      operationId: getJourneyArrivalTimes
+      responses:
+        '200':
+          description: Arrival times retrieved successfully
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ArrivalTime'
+        '404':
+          description: Journey not found
+
+  /api/stations/search:
+    get:
+      summary: Search for transport stations
+      operationId: searchStations
+      parameters:
+        - name: query
+          in: query
+          required: true
+          schema:
+            type: string
+            minLength: 2
+        - name: maxResults
+          in: query
+          required: false
+          schema:
+            type: integer
+            default: 10
+      responses:
+        '200':
+          description: List of matching stations
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/TransportStation'
+
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+
+  responses:
+    UnauthorizedError:
+      description: Authentication information is missing or invalid
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+
+  schemas:
+    Location:
+      type: object
+      required:
+        - id
+        - name
+      properties:
+        id:
+          type: string
+          description: Location identifier
+        name:
+          type: string
+          description: Location name
+
+    JourneyCreate:
+      type: object
+      required:
+        - origin
+        - destination
+      properties:
+        origin:
+          $ref: '#/components/schemas/Location'
+        destination:
+          $ref: '#/components/schemas/Location'
+
+    Journey:
+      type: object
+      required:
+        - id
+        - origin
+        - destination
+      properties:
+        id:
+          type: integer
+          format: int64
+        origin:
+          $ref: '#/components/schemas/Location'
+        destination:
+          $ref: '#/components/schemas/Location'
+        trips:
+          type: array
+          items:
+            $ref: '#/components/schemas/Trip'
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+
+    TransportStation:
+      type: object
+      required:
+        - id
+        - name
+      properties:
+        id:
+          type: string
+          description: Station identifier (e.g., NaptanId)
+        name:
+          type: string
+          description: Station name
+        lines:
+          type: array
+          items:
+            type: string
+          description: Available transport lines at this station
+
+    TripCreate:
+      type: object
+      required:
+        - startingPoint
+        - direction
+      properties:
+        startingPoint:
+          $ref: '#/components/schemas/TransportStation'
+        direction:
+          type: string
+          description: Direction or final destination of the transport line
+
+    Trip:
+      type: object
+      required:
+        - id
+        - startingPoint
+        - direction
+      properties:
+        id:
+          type: integer
+          format: int64
+        startingPoint:
+          $ref: '#/components/schemas/TransportStation'
+        direction:
+          type: string
+        status:
+          type: string
+          enum:
+            - ACTIVE
+            - INACTIVE
+        createdAt:
+          type: string
+          format: date-time
+
+    ArrivalTime:
+      type: object
+      required:
+        - platformName
+        - destinationName
+        - estimatedTimeOfArrival
+      properties:
+        platformName:
+          type: string
+        destinationName:
+          type: string
+        estimatedTimeOfArrival:
+          type: string
+          format: date-time
+        scheduledTimeOfArrival:
+          type: string
+          format: date-time
+        minutesUntilArrival:
+          type: integer
+        status:
+          type: string
+          enum:
+            - ON_TIME
+            - DELAYED
+            - CANCELLED
+
+    Error:
+      type: object
+      required:
+        - code
+        - message
+      properties:
+        code:
+          type: string
+          example: "INVALID_INPUT"
+        message:
+          type: string
+          example: "Invalid input provided"
+        details:
+          type: object
+          additionalProperties: true
