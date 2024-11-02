@@ -10,7 +10,7 @@ info:
     email: api@example.com
 
 security:
-  - bearerAuth: []
+  - bearerAuth: [ ]
 
 paths:
   /journeys:
@@ -126,8 +126,8 @@ paths:
         in: path
         required: true
         schema:
-          type: integer
-          format: int64
+          type: string
+          format: uuid
     get:
       summary: Get real-time arrival information for a journey
       operationId: getJourneyArrivalTimes
@@ -189,12 +189,8 @@ components:
     Location:
       type: object
       required:
-        - id
         - name
       properties:
-        id:
-          type: string
-          description: Location identifier
         name:
           type: string
           description: Location name
@@ -218,8 +214,8 @@ components:
         - destination
       properties:
         id:
-          type: integer
-          format: int64
+          type: string
+          format: uuid
         origin:
           $ref: '#/components/schemas/Location'
         destination:

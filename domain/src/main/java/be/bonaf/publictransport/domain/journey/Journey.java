@@ -1,36 +1,20 @@
 package be.bonaf.publictransport.domain.journey;
 
 import be.bonaf.publictransport.domain.user.UserId;
+import lombok.Builder;
 
-import java.time.Instant;
 import java.util.List;
+import java.util.UUID;
 
+@Builder
 public record Journey(
-    JourneyId id,
-    UserId userId,
-    Location origin,
-    Location destination,
-    List<Trip> trips,
-    Instant createdAt) {
-  public record JourneyId(String value) {}
+    JourneyId id, UserId userId, Location origin, Location destination, List<Trip> trips) {
+  public record JourneyId(UUID value) {}
 
-  public record Trip(
-      TripId id,
-      TransportStation startingPoint,
-      String direction,
-      TripStatus status,
-      Instant createdAt) {
+  @Builder
+  public record Trip(TransportStation startingPoint, String direction) {
 
-    public record TripId(String value) {}
-
-    public record TransportStation(
-        String stationId, // This could be the NaptanId
-        String name,
-        List<String> lines) {}
-
-    public enum TripStatus {
-      ACTIVE,
-      INACTIVE
-    }
+    @Builder
+    public record TransportStation(String stationId, String name, String line) {}
   }
 }
