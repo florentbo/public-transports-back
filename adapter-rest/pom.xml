@@ -10,4 +10,51 @@
         <artifactId>public-transports-back</artifactId>
         <version>${revision}</version>
     </parent>
+
+    <dependencies>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-web</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springdoc</groupId>
+            <artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
+            <version>2.2.0</version>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.openapitools</groupId>
+                <artifactId>openapi-generator-maven-plugin</artifactId>
+                <version>7.9.0</version>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>generate</goal>
+                        </goals>
+                        <configuration>
+                            <inputSpec>${project.basedir}/src/main/resources/specs.yaml</inputSpec>
+                            <generatorName>spring</generatorName>
+                            <apiPackage>be.bonaf.publictransport.adapter.rest.api</apiPackage>
+                            <modelPackage>be.bonaf.publictransport.adapter.rest.model</modelPackage>
+                            <modelNameSuffix>DTO</modelNameSuffix>
+
+                            <generateApis>true</generateApis>
+                            <generateModels>true</generateModels>
+                            <generateApiTests>false</generateApiTests>
+                            <generateModelTests>false</generateModelTests>
+
+                            <configOptions>
+                                <interfaceOnly>true</interfaceOnly>
+                                <openApiNullable>false</openApiNullable>
+                                <useSpringBoot3>true</useSpringBoot3>
+                            </configOptions>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
 </project>

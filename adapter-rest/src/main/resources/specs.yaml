@@ -9,17 +9,11 @@ info:
     name: Public Transport API Team
     email: api@example.com
 
-servers:
-  - url: http://localhost:8080
-    description: Development server
-  - url: https://api.publictransport.com
-    description: Production server
-
 security:
   - bearerAuth: []
 
 paths:
-  /api/journeys:
+  /journeys:
     post:
       summary: Create a new journey
       description: Creates a new journey with origin and destination locations
@@ -62,7 +56,7 @@ paths:
         '401':
           $ref: '#/components/responses/UnauthorizedError'
 
-  /api/journeys/{journeyId}:
+  /journeys/{journeyId}:
     parameters:
       - name: journeyId
         in: path
@@ -95,7 +89,7 @@ paths:
         '404':
           description: Journey not found
 
-  /api/journeys/{journeyId}/trips:
+  /journeys/{journeyId}/trips:
     parameters:
       - name: journeyId
         in: path
@@ -126,7 +120,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/Error'
 
-  /api/journeys/{journeyId}/arrival-times:
+  /journeys/{journeyId}/arrival-times:
     parameters:
       - name: journeyId
         in: path
@@ -149,7 +143,7 @@ paths:
         '404':
           description: Journey not found
 
-  /api/stations/search:
+  /stations/search:
     get:
       summary: Search for transport stations
       operationId: searchStations

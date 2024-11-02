@@ -22,8 +22,8 @@
             <artifactId>lombok</artifactId>
         </dependency>
         <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-web</artifactId>
+            <groupId>be.bonaf</groupId>
+            <artifactId>adapter-rest</artifactId>
         </dependency>
     </dependencies>
 
