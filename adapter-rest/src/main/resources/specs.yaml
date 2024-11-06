@@ -120,26 +120,24 @@ paths:
               schema:
                 $ref: '#/components/schemas/Error'
 
-  /journeys/{journeyId}/arrival-times:
-    parameters:
-      - name: journeyId
-        in: path
-        required: true
-        schema:
-          type: string
-          format: uuid
+  /journeys/{journeyId}/transport-options:
     get:
-      summary: Get real-time arrival information for a journey
-      operationId: getJourneyArrivalTimes
+      summary: Get transport options for a journey
+      operationId: getTransportOptions
+      parameters:
+        - name: journeyId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
       responses:
         '200':
-          description: Arrival times retrieved successfully
+          description: Transport options retrieved successfully
           content:
             application/json:
               schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/ArrivalTime'
+                $ref: '#/components/schemas/TransportOptions'
         '404':
           description: Journey not found
 
@@ -309,6 +307,51 @@ components:
             - ON_TIME
             - DELAYED
             - CANCELLED
+
+    TransportOptions:
+      type: object
+      required:
+        - transportOptions
+      properties:
+        transportOptions:
+          type: array
+          items:
+            $ref: '#/components/schemas/TransportOption'
+
+    TransportOption:
+      type: object
+      required:
+        - type
+        - line
+        - startStation
+        - direction
+        - arrivals
+      properties:
+        type:
+          type: string
+          enum: [ metro, tram, bus, train ]
+        line:
+          type: string
+        startStation:
+          type: string
+        direction:
+          type: string
+        arrivals:
+          type: array
+          items:
+            $ref: '#/components/schemas/Arrival'
+
+    Arrival:
+      type: object
+      required:
+        - time
+        - platform
+      properties:
+        time:
+          type: integer
+          description: Minutes until arrival
+        platform:
+          type: string
 
     Error:
       type: object

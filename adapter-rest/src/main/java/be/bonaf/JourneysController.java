@@ -1,11 +1,9 @@
 package be.bonaf;
 
 import be.bonaf.publictransport.adapter.rest.api.JourneysApi;
-import be.bonaf.publictransport.adapter.rest.model.ArrivalTimeDTO;
-import be.bonaf.publictransport.adapter.rest.model.JourneyDTO;
-import be.bonaf.publictransport.adapter.rest.model.LocationDTO;
-import be.bonaf.publictransport.domain.journey.ArrivalTime;
-import be.bonaf.publictransport.domain.journey.Journey;
+import be.bonaf.publictransport.adapter.rest.model.*;
+import be.bonaf.publictransport.domain.journey.*;
+import be.bonaf.publictransport.domain.journey.Journey.TransportOption;
 import be.bonaf.publictransport.domain.service.JourneyService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
@@ -39,17 +37,28 @@ public class JourneysController implements JourneysApi {
   }
 
   @Override
-  public ResponseEntity<List<ArrivalTimeDTO>> getJourneyArrivalTimes(UUID journeyId) {
-    List<ArrivalTime> arrivalTimes = journeyService.arrivalTimes(new Journey.JourneyId(journeyId));
-    List<ArrivalTimeDTO> arrivalTimeDtos = arrivalTimes.stream().map(this::from).toList();
-
-    return ResponseEntity.ok(arrivalTimeDtos);
+  public ResponseEntity<TransportOptionsDTO> getTransportOptions(UUID journeyId) {
+    List<TransportOption> transportOptions =
+        journeyService.transportOptions(new Journey.JourneyId(journeyId));
+    TransportOptionsDTO transportOptionsDTO = new TransportOptionsDTO();
+    transportOptionsDTO.setTransportOptions(map(transportOptions));
+    return ResponseEntity.ok(transportOptionsDTO);
   }
 
-  ArrivalTimeDTO from(ArrivalTime arrivalTime) {
-    ArrivalTimeDTO arrivalTimeDTO = new ArrivalTimeDTO();
-    arrivalTimeDTO.setDestinationName(arrivalTime.destinationName());
-    arrivalTimeDTO.setMinutesUntilArrival(arrivalTime.minutesUntilArrival());
-    return arrivalTimeDTO;
+  private List<TransportOptionDTO> map(List<TransportOption> transportOptions) {
+    return transportOptions.stream().map(this::from).toList();
+  }
+
+  private TransportOptionDTO from(TransportOption transportOption) {
+    return new TransportOptionDTO()
+        .type(TransportOptionDTO.TypeEnum.valueOf(transportOption.type().name()))
+        .line(transportOption.line())
+        .startStation(transportOption.startStation())
+        .direction(transportOption.direction())
+        .arrivals(transportOption.arrivals().stream().map(this::from).toList());
+  }
+
+  private ArrivalDTO from(Journey.Arrival arrival) {
+    return new ArrivalDTO().time(arrival.time()).platform(arrival.platform());
   }
 }

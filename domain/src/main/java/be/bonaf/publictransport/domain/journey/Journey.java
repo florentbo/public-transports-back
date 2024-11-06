@@ -12,9 +12,29 @@ public record Journey(
   public record JourneyId(UUID value) {}
 
   @Builder
+  public record Arrival(
+          int time,       // Minutes until arrival
+          String platform
+  ) {}
+
+  public enum TransportType {
+    METRO, TRAM, BUS, TRAIN
+  }
+
+  @Builder
+  public record TransportOption(
+          TransportType type,
+          String line,
+          String startStation,
+          String direction,
+          List<Arrival> arrivals
+  ) {}
+
+  @Builder
   public record Trip(TransportStation startingPoint, String direction) {
 
     @Builder
     public record TransportStation(String stationId, String name, String line) {}
   }
+
 }
