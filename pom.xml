@@ -65,6 +65,12 @@
 
             <dependency>
                 <groupId>be.bonaf</groupId>
+                <artifactId>adapter-tfl</artifactId>
+                <version>${revision}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>be.bonaf</groupId>
                 <artifactId>service</artifactId>
                 <version>${revision}</version>
             </dependency>

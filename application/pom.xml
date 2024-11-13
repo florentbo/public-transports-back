@@ -21,6 +21,10 @@
             <groupId>be.bonaf</groupId>
             <artifactId>adapter-rest</artifactId>
         </dependency>
+        <dependency>
+            <groupId>be.bonaf</groupId>
+            <artifactId>adapter-tfl</artifactId>
+        </dependency>
     </dependencies>
 
     <build>
