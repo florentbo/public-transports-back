@@ -8,7 +8,5 @@ import java.util.List;
 public interface JourneyService {
   List<Journey> currentUserJourneys();
 
-  List<ArrivalTime> arrivalTimes(JourneyId journey);
-
   List<TransportOption> transportOptions(JourneyId journey);
 }
