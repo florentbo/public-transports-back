@@ -23,7 +23,7 @@
         </dependency>
         <dependency>
             <groupId>be.bonaf</groupId>
-            <artifactId>domain</artifactId>
+            <artifactId>service</artifactId>
         </dependency>
     </dependencies>
 

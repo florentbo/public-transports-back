@@ -1,4 +1,4 @@
-package be.bonaf.publictransport.domain.service;
+package be.bonaf.publictransport.service;
 
 import be.bonaf.publictransport.domain.journey.*;
 import be.bonaf.publictransport.domain.journey.Journey.*;

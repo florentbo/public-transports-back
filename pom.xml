@@ -64,6 +64,12 @@
             </dependency>
 
             <dependency>
+                <groupId>be.bonaf</groupId>
+                <artifactId>service</artifactId>
+                <version>${revision}</version>
+            </dependency>
+
+            <dependency>
                 <groupId>org.wiremock</groupId>
                 <artifactId>wiremock-standalone</artifactId>
                 <version>${wiremock.version}</version>
@@ -74,6 +80,7 @@
     <modules>
         <module>application</module>
         <module>domain</module>
+        <module>service</module>
         <module>adapter-persistence</module>
         <module>adapter-rest</module>
         <module>adapter-tfl</module>

@@ -4,7 +4,7 @@ import be.bonaf.publictransport.adapter.rest.api.JourneysApi;
 import be.bonaf.publictransport.adapter.rest.model.*;
 import be.bonaf.publictransport.domain.journey.*;
 import be.bonaf.publictransport.domain.journey.Journey.TransportOption;
-import be.bonaf.publictransport.domain.service.JourneyService;
+import be.bonaf.publictransport.service.JourneyService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
 
