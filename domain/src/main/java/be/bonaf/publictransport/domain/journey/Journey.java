@@ -33,7 +33,7 @@ public record Journey(
   @Builder
   public record Trip(TransportStation startingPoint, String direction) {
 
-    @Builder
+    @Builder(builderMethodName = "aTransportStation")
     public record TransportStation(String stationId, String name, String line) {}
   }
 

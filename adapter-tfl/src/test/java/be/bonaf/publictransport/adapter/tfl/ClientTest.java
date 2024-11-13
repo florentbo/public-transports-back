@@ -1,5 +1,6 @@
 package be.bonaf.publictransport.adapter.tfl;
 
+import static be.bonaf.publictransport.adapter.tfl.DepartureTestBuilder.aDefaultToLiverpoolStation;
 import static com.github.tomakehurst.wiremock.client.WireMock.*;
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -24,6 +25,6 @@ class ClientTest {
     List<Departure> departures =
         tflClient.departures("910GCAMHTH", "910GLIVST", "london-overground");
 
-    assertThat(departures).hasSize(18).contains(DepartureTestBuilder.aDefaultToLiverpoolStation());
+    assertThat(departures).hasSize(18).contains(aDefaultToLiverpoolStation().build());
   }
 }

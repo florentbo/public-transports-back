@@ -10,6 +10,6 @@ class MapperTest {
   void from() {
     var arrivalDeparture = ArrivalDepartureTestBuilder.aDefaultToLiverpoolStation();
     assertThat(Mapper.from(arrivalDeparture))
-        .isEqualTo(DepartureTestBuilder.aDefaultToLiverpoolStation());
+        .isEqualTo(DepartureTestBuilder.aDefaultToLiverpoolStation().build());
   }
 }
