@@ -12,6 +12,8 @@ import org.springframework.context.annotation.*;
 import java.util.List;
 import java.util.UUID;
 
+import static be.bonaf.publictransport.domain.journey.Journey.Trip.TransportStation.*;
+
 @SpringBootApplication
 @Import({
   RestAdapterConfig.class,
@@ -53,8 +55,7 @@ public class PublicTransportsApplication {
       private Journey.Trip aTrip() {
         return Journey.Trip.builder()
             .startingPoint(
-                new Journey.Trip.TransportStation(
-                    "910GCAMHTH", "Cambridge Heath (London) Rail Station", "london-overground"))
+                aTransportStation().stationId("910GCAMHTH").line("london-overground").build())
             .direction("910GLIVST")
             .build();
       }

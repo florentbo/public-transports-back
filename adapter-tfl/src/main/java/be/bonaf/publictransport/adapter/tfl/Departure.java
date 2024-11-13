@@ -12,7 +12,9 @@ import java.time.format.ResolverStyle;
 public record Departure(
     String platformName,
     String stationName,
+    String stationId,
     String destinationName,
+    String destinationId,
     LocalTime minutesAndSecondsToArrival) {
 
   static LocalTime minutesAndSecondsToDeparture(String minutesAndSeconds) {

@@ -15,14 +15,21 @@ class ArrivalTimeClientTest {
   @Test
   void arrivalTimes() {
     ArrivalTimeClient arrivalTimeClient = new ArrivalTimeClient(new TflClientStub());
+
     Journey journey = Journey.builder().trips(List.of(aTrip())).build();
+
     List<ArrivalTime> arrivalTimes = arrivalTimeClient.arrivalTimes(journey);
+
     assertThat(arrivalTimes)
-        .contains(
-            ArrivalTime.builder()
-                .destinationName("London Liverpool Street Rail Station")
-                .minutesUntilArrival(3)
-                .build());
+        .containsExactly(
+            liverpoolArrival().minutesUntilArrival(15).build(),
+            liverpoolArrival().minutesUntilArrival(30).build());
+  }
+
+  private ArrivalTime.ArrivalTimeBuilder liverpoolArrival() {
+    return ArrivalTime.builder()
+        .platformName("Platform 1")
+        .destinationName("London Liverpool Street Rail Station");
   }
 
   private Trip aTrip() {
@@ -40,7 +47,11 @@ class ArrivalTimeClientTest {
     @Override
     public List<Departure> departures(
         String startingNaptanId, String destinationNaptanId, String lineId) {
-        return List.of(aDefaultToLiverpoolStation().withMinutesAndSecondsToArrival(3, 4).build());
+      return List.of(
+          aDefaultToLiverpoolStation().withMinutesAndSecondsToArrival(45, 4).build(),
+          aDefaultToLiverpoolStation().withMinutesAndSecondsToArrival(30, 4).build(),
+          aDefaultToLiverpoolStation().withMinutesAndSecondsToArrival(15, 4).build(),
+          aDefaultToCheshuntStation().withMinutesAndSecondsToArrival(7, 4).build());
     }
   }
 }
