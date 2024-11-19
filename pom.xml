@@ -122,6 +122,11 @@
                     <artifactId>jacoco-maven-plugin</artifactId>
                     <version>0.8.8</version>
                 </plugin>
+                <plugin>
+                    <groupId>org.openapitools</groupId>
+                    <artifactId>openapi-generator-maven-plugin</artifactId>
+                    <version>7.10.0</version>
+                </plugin>
             </plugins>
         </pluginManagement>
         <plugins>
