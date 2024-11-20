@@ -6,9 +6,11 @@ import be.bonaf.publictransport.domain.journey.ArrivalTimeService;
 import lombok.AllArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.ImportRuntimeHints;
 
 @Configuration
 @AllArgsConstructor
+@ImportRuntimeHints(NativeConfiguration.class)
 public class TflConfiguration {
 
   @Bean

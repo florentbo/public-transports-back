@@ -6,6 +6,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.openapitools.client.ApiClient;
 import org.openapitools.client.ApiException;
 import org.openapitools.client.api.StopPointApi;
+import org.openapitools.client.model.TflApiPresentationEntitiesArrivalDeparture;
 
 @Slf4j
 public class TflConnector implements TflClient {
@@ -21,7 +22,11 @@ public class TflConnector implements TflClient {
   public List<Departure> departures(
       String startingNaptanId, String destinationNaptanId, String lineId) {
     try {
-      return stopPointApi.stopPointArrivalDepartures(startingNaptanId, List.of(lineId)).stream()
+      log.info("TflConnector +++++++++++++++++++++++++++++");
+      List<TflApiPresentationEntitiesArrivalDeparture> tflApiPresentationEntitiesArrivalDepartures = stopPointApi.stopPointArrivalDepartures(startingNaptanId, List.of(lineId));
+      log.info("Found {} departures", tflApiPresentationEntitiesArrivalDepartures);
+      log.info("TflConnector -----------------------------");
+      return tflApiPresentationEntitiesArrivalDepartures.stream()
           .map(Mapper::from)
           .toList();
     } catch (ApiException e) {

@@ -6,12 +6,14 @@ import be.bonaf.publictransport.domain.journey.ArrivalTime;
 import be.bonaf.publictransport.domain.journey.ArrivalTimeService;
 import be.bonaf.publictransport.domain.journey.Journey;
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 import java.util.Comparator;
 import java.util.List;
 import java.util.function.Predicate;
 
 @AllArgsConstructor
+@Slf4j
 public class ArrivalTimeClient implements ArrivalTimeService {
   private final TflClient tflClient;
 
@@ -26,8 +28,10 @@ public class ArrivalTimeClient implements ArrivalTimeService {
   }
 
   private List<Departure> departures(Journey.Trip trip) {
-    return tflClient.departures(
-        trip.startingPoint().stationId(), trip.direction(), trip.startingPoint().line());
+    List<Departure> departures = tflClient.departures(
+            trip.startingPoint().stationId(), trip.direction(), trip.startingPoint().line());
+    log.info("Found {} departures for trip {}", departures, trip);
+    return departures;
   }
 
   private Predicate<Departure> startAndArrivalAreTheSame(Journey.Trip trip) {
