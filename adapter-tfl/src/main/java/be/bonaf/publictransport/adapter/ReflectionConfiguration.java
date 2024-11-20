@@ -1,3 +1,4 @@
+/*
 package be.bonaf.publictransport.adapter;
 
 import org.springframework.aot.hint.MemberCategory;
@@ -22,3 +23,4 @@ public class ReflectionConfiguration {
         }
     }
 }
+*/
