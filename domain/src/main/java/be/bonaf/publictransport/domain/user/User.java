@@ -1,3 +1,7 @@
 package be.bonaf.publictransport.domain.user;
 
-public record User(UserId id, String name) {}
+import be.bonaf.publictransport.domain.journey.Journey;
+
+import java.util.*;
+
+public record User(UserId id, List<Journey> journeys) {}

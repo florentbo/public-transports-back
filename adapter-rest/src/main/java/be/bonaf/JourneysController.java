@@ -58,7 +58,7 @@ public class JourneysController implements JourneysApi {
         .arrivals(transportOption.arrivals().stream().map(this::from).toList());
   }
 
-  private ArrivalDTO from(Journey.Arrival arrival) {
-    return new ArrivalDTO().time(arrival.time()).platform(arrival.platform());
+  private ArrivalDTO from(TransportOption.Arrival arrival) {
+    return new ArrivalDTO().time(arrival.minutesUntilArrival()).platform(arrival.platform());
   }
 }
