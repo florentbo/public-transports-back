@@ -8,6 +8,7 @@ import org.springframework.context.annotation.*;
 import java.util.*;
 
 import static be.bonaf.publictransport.domain.journey.Journey.*;
+import static be.bonaf.publictransport.domain.journey.Journey.Trip.TransportStation.*;
 
 @Configuration
 @AllArgsConstructor
@@ -16,6 +17,10 @@ import static be.bonaf.publictransport.domain.journey.Journey.*;
 })
 public class ServiceConfiguration {
 
+  private static final JourneyId LONDON_JOURNEY_ID =
+      new JourneyId(UUID.fromString("c4a2c3b4-b6d0-4e0f-a7e1-e2f2d1c0b0c1"));
+  private static final JourneyId BRUSSELS_JOURNEY_ID =
+      JourneyId.from("a3b8d517-8c2a-40d3-9673-736a9398fd6e");
   private final ArrivalTimeService arrivalTimeService;
 
   @Bean
@@ -27,49 +32,87 @@ public class ServiceConfiguration {
     return new JourneyService() {
       @Override
       public List<Journey> currentUserJourneys() {
-        return journeys();
+        return journeys().values().stream().toList();
       }
 
-      private List<Journey> journeys() {
-        Journey journey =
-            builder()
-                .id(new JourneyId(UUID.fromString("c4a2c3b4-b6d0-4e0f-a7e1-e2f2d1c0b0c1")))
-                .origin(
-                    new Location(
-                        new LocationId("origin-id"), "Cambridge Heath (London) Rail Station"))
-                .destination(
-                    new Location(
-                        new LocationId("destination-id"), "London Liverpool Street Rail Station"))
-                .trips(List.of(aTrip()))
+      private Map<JourneyId, Journey> journeys() {
+        var cambridgeHeath =
+            Location.aLocation()
+                .withLocationId(LocationId.create())
+                .withName("Cambridge Heath (London) Rail Station")
                 .build();
-        return List.of(journey);
+        var londonLiverpool =
+            Location.aLocation()
+                .withLocationId(LocationId.create())
+                .withName("London Liverpool Street Rail Station")
+                .build();
+        var journey =
+            builder()
+                .id(LONDON_JOURNEY_ID)
+                .origin(cambridgeHeath)
+                .destination(londonLiverpool)
+                .trips(List.of(londonTrip()))
+                .build();
+
+        var home =
+            Location.aLocation().withLocationId(LocationId.create()).withName("Home").build();
+        var downtown =
+            Location.aLocation().withLocationId(LocationId.create()).withName("Downtown").build();
+
+        var homeToDowntown =
+            builder()
+                .id(BRUSSELS_JOURNEY_ID)
+                .origin(home)
+                .destination(downtown)
+                .trips(List.of(soutStationTrip(), elizabethTrip()))
+                .build();
+        return Map.of(LONDON_JOURNEY_ID, journey, BRUSSELS_JOURNEY_ID, homeToDowntown);
       }
 
-      private Trip aTrip() {
+      private Trip soutStationTrip() {
         return Trip.builder()
-            .startingPoint(
-                Trip.TransportStation.aTransportStation()
-                    .stationId("910GCAMHTH")
-                    .line("london-overground")
-                    .build())
+            .startingPoint(aTransportStation().stationId("5008").build())
+            .name("Woest")
+            .line("51")
+            .direction("GARE DU MIDI")
+            .build();
+      }
+
+      private Trip elizabethTrip() {
+        return Trip.builder()
+            .startingPoint(aTransportStation().stationId("8784").build())
+            .name("Pannenhuis")
+            .line("6")
+            .direction("ELISABETH")
+            .build();
+      }
+
+      private Trip londonTrip() {
+        return Trip.builder()
+            .startingPoint(aTransportStation().stationId("910GCAMHTH").build())
             .direction("910GLIVST")
+            .line("london-overground")
             .build();
       }
 
       @Override
-      public List<TransportOption> transportOptions(JourneyId journey) {
-        var arrivalTimes = arrivalTimeService.arrivalTimes(journeys().get(0));
-        var arrivals = arrivalTimes.stream().map(ArrivalMapper::from).toList();
-        TransportOption transportOption =
-            TransportOption.builder()
-                .type(TransportOption.TransportType.TRAIN)
-                .line("london-overground")
-                .startStation("Cambridge Heath (London) Rail Station")
-                .direction("London Liverpool Street Rail Station")
-                .arrivals(arrivals)
-                .build();
+      public List<TransportOption> transportOptions(JourneyId journeyId) {
+        var journey = journeys().get(journeyId);
 
-        return List.of(transportOption);
+        var arrivalTimes = arrivalTimeService.arrivalTimes(journeys().get(journeyId));
+        var arrivals = arrivalTimes.stream().map(ArrivalMapper::from).toList();
+
+        return journey.trips().stream()
+            .map(
+                j ->
+                    TransportOption.builder()
+                        .type(TransportOption.TransportType.TRAIN)
+                        .line("london-overground")
+                        .startStation("Cambridge Heath (London) Rail Station")
+                        .direction("London Liverpool Street Rail Station")
+                        .arrivals(arrivals)
+                        .build())
+            .toList();
       }
     };
   }

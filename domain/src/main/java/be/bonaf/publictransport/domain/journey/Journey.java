@@ -6,34 +6,35 @@ import java.util.List;
 import java.util.UUID;
 
 @Builder
-public record Journey(
-        JourneyId id, Location origin, Location destination, List<Trip> trips) {
-  public record JourneyId(UUID value) {}
+public record Journey(JourneyId id, Location origin, Location destination, List<Trip> trips) {
+  public record JourneyId(UUID value) {
+    public static JourneyId from(String value) {
+      return new JourneyId(UUID.fromString(value));
+    }
+  }
 
   @Builder
   public record TransportOption(
-          TransportType type,
-          String line,
-          String startStation,
-          String direction,
-          List<Arrival> arrivals
-  ) {
+      TransportType type,
+      String line,
+      String startStation,
+      String direction,
+      List<Arrival> arrivals) {
     public enum TransportType {
-      METRO, TRAM, BUS, TRAIN
+      METRO,
+      TRAM,
+      BUS,
+      TRAIN
     }
 
     @Builder
-    public record Arrival(
-            int minutesUntilArrival,       // Minutes until arrival
-            String platform
-    ) {}
+    public record Arrival(int minutesUntilArrival, String platform) {}
   }
 
   @Builder
-  public record Trip(TransportStation startingPoint, String direction) {
+  public record Trip(TransportStation startingPoint, String name, String line, String direction) {
 
     @Builder(builderMethodName = "aTransportStation")
-    public record TransportStation(String stationId, String name, String line) {}
+    public record TransportStation(String stationId) {}
   }
-
 }

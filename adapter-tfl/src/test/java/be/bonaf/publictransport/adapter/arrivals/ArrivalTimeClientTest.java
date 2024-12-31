@@ -8,6 +8,7 @@ import org.junit.jupiter.api.Test;
 import java.util.List;
 
 import static be.bonaf.publictransport.adapter.tfl.DepartureTestBuilder.*;
+import static be.bonaf.publictransport.domain.journey.Journey.Trip.TransportStation.*;
 import static org.assertj.core.api.Assertions.assertThat;
 
 class ArrivalTimeClientTest {
@@ -34,11 +35,8 @@ class ArrivalTimeClientTest {
 
   private Trip aTrip() {
     return Trip.builder()
-        .startingPoint(
-            Trip.TransportStation.aTransportStation()
-                .stationId("910GCAMHTH")
-                .line("london-overground")
-                .build())
+        .startingPoint(aTransportStation().stationId("910GCAMHTH").build())
+        .line("london-overground")
         .direction("910GLIVST")
         .build();
   }

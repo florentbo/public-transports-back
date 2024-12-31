@@ -28,8 +28,9 @@ public class ArrivalTimeClient implements ArrivalTimeService {
   }
 
   private List<Departure> departures(Journey.Trip trip) {
-    List<Departure> departures = tflClient.departures(
-            trip.startingPoint().stationId(), trip.direction(), trip.startingPoint().line());
+    List<Departure> departures =
+        tflClient.departures(
+            trip.startingPoint().stationId(), trip.direction(), trip.line());
     log.info("Found {} departures for trip {}", departures, trip);
     return departures;
   }
