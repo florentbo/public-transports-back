@@ -1,8 +1,9 @@
 package be.bonaf.publictransport.service;
 
+import be.bonaf.publictransport.adapter.LondonArrivalTimeService;
 import be.bonaf.publictransport.adapter.TflConfiguration;
 import be.bonaf.publictransport.domain.journey.*;
-import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.*;
 
 import java.util.*;
@@ -11,17 +12,22 @@ import static be.bonaf.publictransport.domain.journey.Journey.*;
 import static be.bonaf.publictransport.domain.journey.Journey.Trip.TransportStation.*;
 
 @Configuration
-@AllArgsConstructor
 @Import({
   TflConfiguration.class,
 })
+@Slf4j
 public class ServiceConfiguration {
 
   private static final JourneyId LONDON_JOURNEY_ID =
       new JourneyId(UUID.fromString("c4a2c3b4-b6d0-4e0f-a7e1-e2f2d1c0b0c1"));
   private static final JourneyId BRUSSELS_JOURNEY_ID =
       JourneyId.from("a3b8d517-8c2a-40d3-9673-736a9398fd6e");
+
   private final ArrivalTimeService arrivalTimeService;
+
+  public ServiceConfiguration(@LondonArrivalTimeService ArrivalTimeService arrivalTimeService) {
+    this.arrivalTimeService = arrivalTimeService;
+  }
 
   @Bean
   public JourneyService journeyService() {
@@ -32,7 +38,9 @@ public class ServiceConfiguration {
     return new JourneyService() {
       @Override
       public List<Journey> currentUserJourneys() {
-        return journeys().values().stream().toList();
+        Collection<Journey> values = journeys().values();
+        log.info("Found {} journeys", values.size());
+        return values.stream().toList();
       }
 
       private Map<JourneyId, Journey> journeys() {

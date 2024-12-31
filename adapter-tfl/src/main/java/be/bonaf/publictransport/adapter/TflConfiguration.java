@@ -14,7 +14,8 @@ import org.springframework.context.annotation.ImportRuntimeHints;
 public class TflConfiguration {
 
   @Bean
-  public ArrivalTimeService arrivalTimeService() {
+  @LondonArrivalTimeService
+  public ArrivalTimeService londonArrivalTimeService() {
     return new ArrivalTimeClient(new TflConnector("https://api.tfl.gov.uk"));
   }
 }
