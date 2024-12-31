@@ -17,7 +17,7 @@ public record Departure(
     String destinationId,
     LocalTime minutesAndSecondsToArrival) {
 
-  static LocalTime minutesAndSecondsToDeparture(String minutesAndSeconds) {
+  public static LocalTime minutesAndSecondsToDeparture(String minutesAndSeconds) {
     DateTimeFormatter formatter =
         new DateTimeFormatterBuilder()
             .appendPattern("m:s")

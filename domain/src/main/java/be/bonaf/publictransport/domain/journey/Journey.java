@@ -6,12 +6,17 @@ import java.util.List;
 import java.util.UUID;
 
 @Builder
-public record Journey(JourneyId id, Location origin, Location destination, List<Trip> trips) {
+public record Journey(JourneyId id, City city, Location origin, Location destination, List<Trip> trips) {
   public enum TransportType {
     METRO,
     TRAM,
     BUS,
     TRAIN
+  }
+
+  public enum City {
+    LONDON,
+    BRUSSELS
   }
 
   public record JourneyId(UUID value) {

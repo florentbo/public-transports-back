@@ -49,6 +49,7 @@ public class ServiceConfiguration {
         var journey =
             builder()
                 .id(LONDON_JOURNEY_ID)
+                .city(City.LONDON)
                 .origin(cambridgeHeath)
                 .destination(londonLiverpool)
                 .trips(List.of(londonTrip()))
@@ -62,6 +63,7 @@ public class ServiceConfiguration {
         var homeToDowntown =
             builder()
                 .id(BRUSSELS_JOURNEY_ID)
+                .city(City.BRUSSELS)
                 .origin(home)
                 .destination(downtown)
                 .trips(List.of(soutStationTrip(), elizabethTrip()))
