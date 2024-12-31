@@ -1,4 +1,4 @@
-package be.bonaf.publictransport.adapter.stib;
+package be.bonaf.publictransport.adapter.stib.client;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.core.JsonParser;

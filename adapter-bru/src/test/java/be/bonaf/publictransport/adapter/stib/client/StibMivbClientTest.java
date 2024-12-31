@@ -1,4 +1,4 @@
-package be.bonaf.publictransport.adapter.stib;
+package be.bonaf.publictransport.adapter.stib.client;
 
 import static com.github.tomakehurst.wiremock.client.WireMock.*;
 import static org.assertj.core.api.Assertions.assertThat;

@@ -1,10 +1,11 @@
-package be.bonaf.publictransport.adapter.stib;
+package be.bonaf.publictransport.adapter.stib.client;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
 
-import static be.bonaf.publictransport.adapter.stib.WaitingTimes.Result.*;
-import static be.bonaf.publictransport.adapter.stib.WaitingTimes.Result.PassingTime.*;
+import static be.bonaf.publictransport.adapter.stib.client.WaitingTimes.Result.*;
+import static be.bonaf.publictransport.adapter.stib.client.WaitingTimes.Result.PassingTime.*;
+
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.time.*;
 import java.util.List;
