@@ -106,7 +106,7 @@ public class ServiceConfiguration {
             .map(
                 j ->
                     TransportOption.builder()
-                        .type(TransportOption.TransportType.TRAIN)
+                        .type(TransportType.TRAIN)
                         .line("london-overground")
                         .startStation("Cambridge Heath (London) Rail Station")
                         .direction("London Liverpool Street Rail Station")

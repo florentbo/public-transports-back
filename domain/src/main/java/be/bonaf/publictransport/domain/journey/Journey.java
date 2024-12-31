@@ -7,6 +7,13 @@ import java.util.UUID;
 
 @Builder
 public record Journey(JourneyId id, Location origin, Location destination, List<Trip> trips) {
+  public enum TransportType {
+    METRO,
+    TRAM,
+    BUS,
+    TRAIN
+  }
+
   public record JourneyId(UUID value) {
     public static JourneyId from(String value) {
       return new JourneyId(UUID.fromString(value));
@@ -20,12 +27,6 @@ public record Journey(JourneyId id, Location origin, Location destination, List<
       String startStation,
       String direction,
       List<Arrival> arrivals) {
-    public enum TransportType {
-      METRO,
-      TRAM,
-      BUS,
-      TRAIN
-    }
 
     @Builder
     public record Arrival(int minutesUntilArrival, String platform) {}
