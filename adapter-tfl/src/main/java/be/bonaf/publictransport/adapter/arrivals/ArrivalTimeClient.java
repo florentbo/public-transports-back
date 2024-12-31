@@ -1,6 +1,6 @@
 package be.bonaf.publictransport.adapter.arrivals;
 
-import be.bonaf.publictransport.adapter.tfl.Departure;
+import be.bonaf.publictransport.domain.schedule.Departure;
 import be.bonaf.publictransport.adapter.tfl.TflClient;
 import be.bonaf.publictransport.domain.journey.ArrivalTime;
 import be.bonaf.publictransport.domain.journey.ArrivalTimeService;

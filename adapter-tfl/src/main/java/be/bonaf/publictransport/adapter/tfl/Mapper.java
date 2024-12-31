@@ -1,8 +1,9 @@
 package be.bonaf.publictransport.adapter.tfl;
 
+import be.bonaf.publictransport.domain.schedule.Departure;
 import org.openapitools.client.model.TflApiPresentationEntitiesArrivalDeparture;
 
-import static be.bonaf.publictransport.adapter.tfl.Departure.minutesAndSecondsToDeparture;
+import static be.bonaf.publictransport.domain.schedule.Departure.minutesAndSecondsToDeparture;
 
 public class Mapper {
   static Departure from(TflApiPresentationEntitiesArrivalDeparture arrivalDeparture) {

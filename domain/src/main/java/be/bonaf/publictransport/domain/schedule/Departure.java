@@ -1,4 +1,4 @@
-package be.bonaf.publictransport.adapter.tfl;
+package be.bonaf.publictransport.domain.schedule;
 
 import lombok.Builder;
 

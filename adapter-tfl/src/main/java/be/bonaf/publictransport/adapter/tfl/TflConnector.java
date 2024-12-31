@@ -2,6 +2,7 @@ package be.bonaf.publictransport.adapter.tfl;
 
 import java.util.List;
 
+import be.bonaf.publictransport.domain.schedule.Departure;
 import lombok.extern.slf4j.Slf4j;
 import org.openapitools.client.ApiClient;
 import org.openapitools.client.ApiException;

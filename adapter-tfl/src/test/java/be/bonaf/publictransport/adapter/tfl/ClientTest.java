@@ -4,6 +4,7 @@ import static be.bonaf.publictransport.adapter.tfl.DepartureTestBuilder.aDefault
 import static com.github.tomakehurst.wiremock.client.WireMock.*;
 import static org.assertj.core.api.Assertions.assertThat;
 
+import be.bonaf.publictransport.domain.schedule.Departure;
 import com.github.tomakehurst.wiremock.junit5.WireMockRuntimeInfo;
 import com.github.tomakehurst.wiremock.junit5.WireMockTest;
 

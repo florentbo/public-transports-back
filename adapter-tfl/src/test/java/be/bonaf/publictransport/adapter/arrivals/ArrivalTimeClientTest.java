@@ -3,6 +3,7 @@ package be.bonaf.publictransport.adapter.arrivals;
 import be.bonaf.publictransport.adapter.tfl.*;
 import be.bonaf.publictransport.domain.journey.*;
 import be.bonaf.publictransport.domain.journey.Journey.Trip;
+import be.bonaf.publictransport.domain.schedule.Departure;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;

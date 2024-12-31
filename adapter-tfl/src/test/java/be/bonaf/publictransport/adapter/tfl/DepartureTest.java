@@ -1,5 +1,6 @@
 package be.bonaf.publictransport.adapter.tfl;
 
+import be.bonaf.publictransport.domain.schedule.Departure;
 import org.junit.jupiter.params.*;
 import org.junit.jupiter.params.provider.ValueSource;
 
