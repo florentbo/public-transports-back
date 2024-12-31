@@ -33,9 +33,9 @@ public record Journey(JourneyId id, Location origin, Location destination, List<
   }
 
   @Builder
-  public record Trip(TransportStation startingPoint, String name, String line, String direction) {
+  public record Trip(TransportStation startingPoint, String line, String direction) {
 
     @Builder(builderMethodName = "aTransportStation")
-    public record TransportStation(String stationId) {}
+    public record TransportStation(String stationId, String name) {}
   }
 }

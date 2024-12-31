@@ -71,8 +71,7 @@ public class ServiceConfiguration {
 
       private Trip soutStationTrip() {
         return Trip.builder()
-            .startingPoint(aTransportStation().stationId("5008").build())
-            .name("Woest")
+            .startingPoint(aTransportStation().stationId("5008").name("Woest").build())
             .line("51")
             .direction("GARE DU MIDI")
             .build();
@@ -80,8 +79,7 @@ public class ServiceConfiguration {
 
       private Trip elizabethTrip() {
         return Trip.builder()
-            .startingPoint(aTransportStation().stationId("8784").build())
-            .name("Pannenhuis")
+            .startingPoint(aTransportStation().stationId("8784").name("Pannenhuis").build())
             .line("6")
             .direction("ELISABETH")
             .build();
@@ -104,12 +102,12 @@ public class ServiceConfiguration {
 
         return journey.trips().stream()
             .map(
-                j ->
+                trip ->
                     TransportOption.builder()
                         .type(TransportType.TRAIN)
-                        .line("london-overground")
-                        .startStation("Cambridge Heath (London) Rail Station")
-                        .direction("London Liverpool Street Rail Station")
+                        .line(trip.line())
+                        .startStation(trip.startingPoint().name())
+                        .direction(trip.direction())
                         .arrivals(arrivals)
                         .build())
             .toList();
