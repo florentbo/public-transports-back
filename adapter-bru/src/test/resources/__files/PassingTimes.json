@@ -1,0 +1,15 @@
+{
+  "total_count": 2,
+  "results": [
+    {
+      "pointid": "5077",
+      "lineid": "51",
+      "passingtimes": "[{\"destination\": {\"fr\": \"STADE\", \"nl\": \"STADION\"}, \"expectedArrivalTime\": \"2024-12-30T08:25:00+01:00\", \"lineId\": \"51\"}, {\"destination\": {\"fr\": \"STADE\", \"nl\": \"STADION\"}, \"expectedArrivalTime\": \"2024-12-30T08:35:00+01:00\", \"lineId\": \"51\"}]"
+    },
+    {
+      "pointid": "5008",
+      "lineid": "51",
+      "passingtimes": "[{\"destination\": {\"fr\": \"GARE DU MIDI\", \"nl\": \"ZUIDSTATION\"}, \"expectedArrivalTime\": \"2024-12-30T08:26:00+01:00\", \"lineId\": \"51\"}, {\"destination\": {\"fr\": \"GARE DU MIDI\", \"nl\": \"ZUIDSTATION\"}, \"expectedArrivalTime\": \"2024-12-30T08:34:00+01:00\", \"lineId\": \"51\"}]"
+    }
+  ]
+}

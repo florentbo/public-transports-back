@@ -28,6 +28,11 @@
             <scope>test</scope>
         </dependency>
         <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter-params</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
             <groupId>org.assertj</groupId>
             <artifactId>assertj-core</artifactId>
             <scope>test</scope>
@@ -71,6 +76,12 @@
 
             <dependency>
                 <groupId>be.bonaf</groupId>
+                <artifactId>adapter-bru</artifactId>
+                <version>${revision}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>be.bonaf</groupId>
                 <artifactId>service</artifactId>
                 <version>${revision}</version>
             </dependency>
@@ -79,6 +90,17 @@
                 <groupId>org.wiremock</groupId>
                 <artifactId>wiremock-standalone</artifactId>
                 <version>${wiremock.version}</version>
+                <scope>test</scope>
+                <exclusions>
+                    <exclusion>
+                        <artifactId>commons-fileupload</artifactId>
+                        <groupId>commons-fileupload</groupId>
+                    </exclusion>
+                    <exclusion>
+                        <artifactId>xmlunit-core</artifactId>
+                        <groupId>org.xmlunit</groupId>
+                    </exclusion>
+                </exclusions>
             </dependency>
         </dependencies>
     </dependencyManagement>
@@ -90,6 +112,7 @@
         <module>adapter-persistence</module>
         <module>adapter-rest</module>
         <module>adapter-tfl</module>
+        <module>adapter-bru</module>
     </modules>
 
     <properties>
@@ -101,7 +124,7 @@
         <spring-boot.version>3.3.5</spring-boot.version>
         <maven-surefire-plugin.version>3.1.2</maven-surefire-plugin.version>
 
-        <wiremock.version>3.3.1</wiremock.version>
+        <wiremock.version>3.9.2</wiremock.version>
     </properties>
 
     <build>
