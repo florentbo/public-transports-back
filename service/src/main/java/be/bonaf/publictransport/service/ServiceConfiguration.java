@@ -2,6 +2,8 @@ package be.bonaf.publictransport.service;
 
 import be.bonaf.publictransport.adapter.LondonArrivalTimeService;
 import be.bonaf.publictransport.adapter.TflConfiguration;
+import be.bonaf.publictransport.adapter.configuration.BruArrivalTimeService;
+import be.bonaf.publictransport.adapter.configuration.BruConfiguration;
 import be.bonaf.publictransport.domain.journey.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.*;
@@ -14,6 +16,7 @@ import static be.bonaf.publictransport.domain.journey.Journey.Trip.TransportStat
 @Configuration
 @Import({
   TflConfiguration.class,
+  BruConfiguration.class,
 })
 @Slf4j
 public class ServiceConfiguration {
@@ -24,9 +27,13 @@ public class ServiceConfiguration {
       JourneyId.from("a3b8d517-8c2a-40d3-9673-736a9398fd6e");
 
   private final ArrivalTimeService arrivalTimeService;
+  private final ArrivalTimeService bruArrivalTimeService;
 
-  public ServiceConfiguration(@LondonArrivalTimeService ArrivalTimeService arrivalTimeService) {
+  public ServiceConfiguration(
+      @LondonArrivalTimeService ArrivalTimeService arrivalTimeService,
+      @BruArrivalTimeService ArrivalTimeService bruArrivalTimeService) {
     this.arrivalTimeService = arrivalTimeService;
+    this.bruArrivalTimeService = bruArrivalTimeService;
   }
 
   @Bean
@@ -107,7 +114,7 @@ public class ServiceConfiguration {
       public List<TransportOption> transportOptions(JourneyId journeyId) {
         var journey = journeys().get(journeyId);
 
-        var arrivalTimes = arrivalTimeService.arrivalTimes(journeys().get(journeyId));
+        var arrivalTimes = arrivalTimes(journey);
         var arrivals = arrivalTimes.stream().map(ArrivalMapper::from).toList();
 
         return journey.trips().stream()
@@ -121,6 +128,14 @@ public class ServiceConfiguration {
                         .arrivals(arrivals)
                         .build())
             .toList();
+      }
+
+      private List<ArrivalTime> arrivalTimes(Journey journey) {
+
+        return switch (journey.city()) {
+          case LONDON -> arrivalTimeService.arrivalTimes(journey);
+          case BRUSSELS -> bruArrivalTimeService.arrivalTimes(journey);
+        };
       }
     };
   }

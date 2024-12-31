@@ -19,7 +19,7 @@ public class Mapper {
     this.clock = clock;
   }
 
-  List<ArrivalTime> from(WaitingTimes waitingTimes) {
+  public List<ArrivalTime> from(WaitingTimes waitingTimes) {
     return waitingTimes.results().stream().flatMap(this::from2).toList();
   }
 

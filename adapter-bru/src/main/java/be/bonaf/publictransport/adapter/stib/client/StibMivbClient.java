@@ -27,7 +27,7 @@ public class StibMivbClient {
     System.out.println(waitingTimes);
   }
 
-  WaitingTimes waitingTimes(List<String> pointIds) {
+  public WaitingTimes waitingTimes(List<String> pointIds) {
     String responseBody = send(pointIds);
     return map(responseBody);
   }
