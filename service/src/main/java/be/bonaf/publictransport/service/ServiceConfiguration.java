@@ -2,8 +2,7 @@ package be.bonaf.publictransport.service;
 
 import be.bonaf.publictransport.adapter.LondonArrivalTimeService;
 import be.bonaf.publictransport.adapter.TflConfiguration;
-import be.bonaf.publictransport.adapter.configuration.BruArrivalTimeService;
-import be.bonaf.publictransport.adapter.configuration.BruConfiguration;
+import be.bonaf.publictransport.adapter.configuration.*;
 import be.bonaf.publictransport.domain.journey.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.*;

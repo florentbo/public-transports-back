@@ -30,6 +30,9 @@ public class BruConfiguration {
                   .map(Journey.Trip::startingPoint)
                   .map(Journey.Trip.TransportStation::stationId)
                   .toList());
+      trips.stream().map(Journey.Trip::line);
+
+
       return mapper.from(waitingTimes);
     };
   }
