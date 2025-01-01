@@ -112,8 +112,33 @@ public class ServiceConfiguration {
       @Override
       public List<TransportOption> transportOptions(JourneyId journeyId) {
         var journey = journeys().get(journeyId);
+        return switch (journey.city()) {
+          case LONDON -> london(journey);
+          case BRUSSELS -> bru(journey);
+        };
+      }
 
-        var arrivalTimes = arrivalTimes(journey);
+      private List<TransportOption> bru(Journey journey) {
+        Map<String, List<ArrivalTime>> arrivalTimes =
+            bruArrivalTimeService.arrivalTimesPerLine(journey);
+        return journey.trips().stream()
+            .map(
+                trip -> {
+                  var arrivals =
+                      arrivalTimes.get(trip.line()).stream().map(ArrivalMapper::from).toList();
+                  return TransportOption.builder()
+                      .type(TransportType.TRAIN)
+                      .line(trip.line())
+                      .startStation(trip.startingPoint().name())
+                      .direction(trip.direction())
+                      .arrivals(arrivals)
+                      .build();
+                })
+            .toList();
+      }
+
+      private List<TransportOption> london(Journey journey) {
+        var arrivalTimes = arrivalTimeService.arrivalTimes(journey);
         var arrivals = arrivalTimes.stream().map(ArrivalMapper::from).toList();
 
         return journey.trips().stream()
@@ -127,14 +152,6 @@ public class ServiceConfiguration {
                         .arrivals(arrivals)
                         .build())
             .toList();
-      }
-
-      private List<ArrivalTime> arrivalTimes(Journey journey) {
-
-        return switch (journey.city()) {
-          case LONDON -> arrivalTimeService.arrivalTimes(journey);
-          case BRUSSELS -> bruArrivalTimeService.arrivalTimes(journey);
-        };
       }
     };
   }
