@@ -13,6 +13,7 @@ import java.util.Map;
 
 @Configuration
 @AllArgsConstructor
+@ImportRuntimeHints(NativeConfiguration.class)
 public class BruConfiguration {
 
   @Bean
