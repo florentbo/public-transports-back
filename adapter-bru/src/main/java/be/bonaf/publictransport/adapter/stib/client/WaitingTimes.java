@@ -33,7 +33,7 @@ public record WaitingTimes(@JsonProperty("total_count") int count, List<Result> 
     }
   }
 
-  private static class PassingTimesDeserializer extends JsonDeserializer<List<Result.PassingTime>> {
+  public static class PassingTimesDeserializer extends JsonDeserializer<List<Result.PassingTime>> {
     @Override
     public List<Result.PassingTime> deserialize(
         JsonParser jsonParser, DeserializationContext context) throws IOException {
