@@ -11,7 +11,7 @@ jobs:
       - uses: graalvm/setup-graalvm@v1
         with:
           distribution: 'graalvm'
-          java-version: '17'
+          java-version: '21'
       - name: Build with Maven
         run: mvn -Pnative package
       - uses: superfly/flyctl-actions/setup-flyctl@master
