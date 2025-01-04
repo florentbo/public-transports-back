@@ -3,36 +3,37 @@ package be.bonaf.publictransport.service;
 import be.bonaf.publictransport.adapter.LondonArrivalTimeService;
 import be.bonaf.publictransport.adapter.TflConfiguration;
 import be.bonaf.publictransport.adapter.configuration.*;
+import be.bonaf.publictransport.domain.DomainNativeConfiguration;
 import be.bonaf.publictransport.domain.journey.*;
+import be.bonaf.publictransport.domain.user.UserRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.*;
 
 import java.util.*;
 
 import static be.bonaf.publictransport.domain.journey.Journey.*;
-import static be.bonaf.publictransport.domain.journey.Journey.Trip.TransportStation.*;
 
 @Configuration
 @Import({
   TflConfiguration.class,
   BruConfiguration.class,
+  InMemoryConfiguration.class,
 })
+@ImportRuntimeHints(DomainNativeConfiguration.class)
 @Slf4j
 public class ServiceConfiguration {
 
-  private static final JourneyId LONDON_JOURNEY_ID =
-      new JourneyId(UUID.fromString("c4a2c3b4-b6d0-4e0f-a7e1-e2f2d1c0b0c1"));
-  private static final JourneyId BRUSSELS_JOURNEY_ID =
-      JourneyId.from("a3b8d517-8c2a-40d3-9673-736a9398fd6e");
-
   private final ArrivalTimeService arrivalTimeService;
   private final ArrivalTimeService bruArrivalTimeService;
+  private final UserRepository userRepository;
 
   public ServiceConfiguration(
       @LondonArrivalTimeService ArrivalTimeService arrivalTimeService,
-      @BruArrivalTimeService ArrivalTimeService bruArrivalTimeService) {
+      @BruArrivalTimeService ArrivalTimeService bruArrivalTimeService,
+      UserRepository userRepository) {
     this.arrivalTimeService = arrivalTimeService;
     this.bruArrivalTimeService = bruArrivalTimeService;
+    this.userRepository = userRepository;
   }
 
   @Bean
@@ -44,74 +45,14 @@ public class ServiceConfiguration {
     return new JourneyService() {
       @Override
       public List<Journey> currentUserJourneys() {
-        Collection<Journey> values = journeys().values();
+        List<Journey> values = userRepository.journeys();
         log.info("Found {} journeys", values.size());
-        return values.stream().toList();
-      }
-
-      private Map<JourneyId, Journey> journeys() {
-        var cambridgeHeath =
-            Location.aLocation()
-                .withLocationId(LocationId.create())
-                .withName("Cambridge Heath (London) Rail Station")
-                .build();
-        var londonLiverpool =
-            Location.aLocation()
-                .withLocationId(LocationId.create())
-                .withName("London Liverpool Street Rail Station")
-                .build();
-        var journey =
-            builder()
-                .id(LONDON_JOURNEY_ID)
-                .city(City.LONDON)
-                .origin(cambridgeHeath)
-                .destination(londonLiverpool)
-                .trips(List.of(londonTrip()))
-                .build();
-
-        var home =
-            Location.aLocation().withLocationId(LocationId.create()).withName("Home").build();
-        var downtown =
-            Location.aLocation().withLocationId(LocationId.create()).withName("Downtown").build();
-
-        var homeToDowntown =
-            builder()
-                .id(BRUSSELS_JOURNEY_ID)
-                .city(City.BRUSSELS)
-                .origin(home)
-                .destination(downtown)
-                .trips(List.of(soutStationTrip(), elizabethTrip()))
-                .build();
-        return Map.of(LONDON_JOURNEY_ID, journey, BRUSSELS_JOURNEY_ID, homeToDowntown);
-      }
-
-      private Trip soutStationTrip() {
-        return Trip.builder()
-            .startingPoint(aTransportStation().stationId("5008").name("Woest").build())
-            .line("51")
-            .direction("GARE DU MIDI")
-            .build();
-      }
-
-      private Trip elizabethTrip() {
-        return Trip.builder()
-            .startingPoint(aTransportStation().stationId("8784").name("Pannenhuis").build())
-            .line("6")
-            .direction("ELISABETH")
-            .build();
-      }
-
-      private Trip londonTrip() {
-        return Trip.builder()
-            .startingPoint(aTransportStation().stationId("910GCAMHTH").build())
-            .direction("910GLIVST")
-            .line("london-overground")
-            .build();
+        return values;
       }
 
       @Override
       public List<TransportOption> transportOptions(JourneyId journeyId) {
-        var journey = journeys().get(journeyId);
+        var journey = userRepository.journey(journeyId);
         return switch (journey.city()) {
           case LONDON -> london(journey);
           case BRUSSELS -> bru(journey);

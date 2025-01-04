@@ -1,4 +1,3 @@
-// NativeConfiguration.java
 package be.bonaf.publictransport.adapter;
 
 import org.springframework.aot.hint.RuntimeHints;

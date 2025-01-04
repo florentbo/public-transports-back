@@ -9,4 +9,11 @@
         <artifactId>public-transports-back</artifactId>
         <version>${revision}</version>
     </parent>
+
+    <dependencies>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-context</artifactId>
+        </dependency>
+    </dependencies>
 </project>
