@@ -3,6 +3,7 @@ package be.bonaf.publictransport.service;
 import be.bonaf.publictransport.adapter.LondonArrivalTimeService;
 import be.bonaf.publictransport.adapter.TflConfiguration;
 import be.bonaf.publictransport.adapter.configuration.*;
+import be.bonaf.publictransport.domain.DomainNativeConfiguration;
 import be.bonaf.publictransport.domain.journey.*;
 import be.bonaf.publictransport.domain.user.UserRepository;
 import lombok.extern.slf4j.Slf4j;
@@ -18,6 +19,7 @@ import static be.bonaf.publictransport.domain.journey.Journey.*;
   BruConfiguration.class,
   InMemoryConfiguration.class,
 })
+@ImportRuntimeHints(DomainNativeConfiguration.class)
 @Slf4j
 public class ServiceConfiguration {
 
