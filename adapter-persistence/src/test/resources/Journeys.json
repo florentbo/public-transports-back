@@ -1,0 +1,54 @@
+{
+  "a3b8d517-8c2a-40d3-9673-736a9398fd6e": {
+    "id": "a3b8d517-8c2a-40d3-9673-736a9398fd6e",
+    "city": "BRUSSELS",
+    "origin": {
+      "locationId": null,
+      "name": "Home"
+    },
+    "destination": {
+      "locationId": null,
+      "name": "Downtown"
+    },
+    "trips": [
+      {
+        "startingPoint": {
+          "stationId": "5008",
+          "name": "Woest"
+        },
+        "line": "51",
+        "direction": "GARE DU MIDI"
+      },
+      {
+        "startingPoint": {
+          "stationId": "8784",
+          "name": "Pannenhuis"
+        },
+        "line": "6",
+        "direction": "ELISABETH"
+      }
+    ]
+  },
+  "c4a2c3b4-b6d0-4e0f-a7e1-e2f2d1c0b0c1": {
+    "id": "c4a2c3b4-b6d0-4e0f-a7e1-e2f2d1c0b0c1",
+    "city": "LONDON",
+    "origin": {
+      "locationId": null,
+      "name": "Cambridge Heath (London) Rail Station"
+    },
+    "destination": {
+      "locationId": null,
+      "name": "London Liverpool Street Rail Station"
+    },
+    "trips": [
+      {
+        "startingPoint": {
+          "stationId": "910GCAMHTH",
+          "name": null
+        },
+        "line": "london-overground",
+        "direction": "910GLIVST"
+      }
+    ]
+  }
+}
