@@ -7,6 +7,7 @@ import be.bonaf.publictransport.domain.schedule.Departure;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
+import java.util.Map;
 
 import static be.bonaf.publictransport.adapter.tfl.DepartureTestBuilder.*;
 import static be.bonaf.publictransport.domain.journey.Journey.Trip.TransportStation.*;
@@ -51,6 +52,11 @@ class ArrivalTimeClientTest {
           aDefaultToLiverpoolStation().withMinutesAndSecondsToArrival(30, 4).build(),
           aDefaultToLiverpoolStation().withMinutesAndSecondsToArrival(15, 4).build(),
           aDefaultToCheshuntStation().withMinutesAndSecondsToArrival(7, 4).build());
+    }
+
+    @Override
+    public Map<String, List<ArrivalTime>> arrivals(String stopId) {
+      return Map.of();
     }
   }
 }

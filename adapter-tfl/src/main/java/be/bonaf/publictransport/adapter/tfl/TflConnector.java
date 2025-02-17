@@ -1,7 +1,9 @@
 package be.bonaf.publictransport.adapter.tfl;
 
 import java.util.List;
+import java.util.Map;
 
+import be.bonaf.publictransport.domain.journey.ArrivalTime;
 import be.bonaf.publictransport.domain.schedule.Departure;
 import lombok.extern.slf4j.Slf4j;
 import org.openapitools.client.ApiClient;
@@ -34,6 +36,11 @@ public class TflConnector implements TflClient {
       log.error("Error while calling TfL API", e);
       throw new TflClientException(e);
     }
+  }
+
+  @Override
+  public Map<String, List<ArrivalTime>> arrivals(String stopId) {
+    return Map.of();
   }
 
   static class TflClientException extends RuntimeException {
