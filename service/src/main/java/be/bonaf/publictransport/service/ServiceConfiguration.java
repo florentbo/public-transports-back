@@ -60,8 +60,17 @@ public class ServiceConfiguration {
       }
 
       private List<TransportOption> bru(Journey journey) {
-        Map<String, List<ArrivalTime>> arrivalTimes =
-            bruArrivalTimeService.arrivalTimesPerLine(journey);
+        var arrivalTimes = bruArrivalTimeService.arrivalTimesPerLine(journey);
+        return transportOptions(journey, arrivalTimes);
+      }
+
+      private List<TransportOption> london(Journey journey) {
+        var arrivalTimes = arrivalTimeService.arrivalTimesPerLine(journey);
+        return transportOptions(journey, arrivalTimes);
+      }
+
+      private List<TransportOption> transportOptions(
+          Journey journey, Map<String, List<ArrivalTime>> arrivalTimes) {
         return journey.trips().stream()
             .map(
                 trip -> {
@@ -75,23 +84,6 @@ public class ServiceConfiguration {
                       .arrivals(arrivals)
                       .build();
                 })
-            .toList();
-      }
-
-      private List<TransportOption> london(Journey journey) {
-        var arrivalTimes = arrivalTimeService.arrivalTimes(journey);
-        var arrivals = arrivalTimes.stream().map(ArrivalMapper::from).toList();
-
-        return journey.trips().stream()
-            .map(
-                trip ->
-                    TransportOption.builder()
-                        .type(TransportType.TRAIN)
-                        .line(trip.line())
-                        .startStation(trip.startingPoint().name())
-                        .direction(trip.direction())
-                        .arrivals(arrivals)
-                        .build())
             .toList();
       }
     };

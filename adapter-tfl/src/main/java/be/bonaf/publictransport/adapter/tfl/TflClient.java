@@ -8,6 +8,6 @@ import java.util.Map;
 
 public interface TflClient {
   List<Departure> departures(String startingNaptanId, String destinationNaptanId, String lineId);
-  Map<String, List<ArrivalTime>> arrivals(String stopId);
+  Map<String, List<Arrival>> arrivals(String stopId);
 
 }

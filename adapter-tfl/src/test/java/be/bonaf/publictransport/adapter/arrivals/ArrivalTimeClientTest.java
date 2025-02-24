@@ -43,6 +43,37 @@ class ArrivalTimeClientTest {
         .build();
   }
 
+  @Test
+  void arrivalTimesPerLine() {
+    ArrivalTimeClient arrivalTimeClient = new ArrivalTimeClient(new TflClientStub());
+
+    Journey journey = Journey.builder().trips(List.of(aBusTrip())).build();
+
+    Map<String, List<ArrivalTime>> arrivalTimesPerLine =
+        arrivalTimeClient.arrivalTimesPerLine(journey);
+
+    assertThat(arrivalTimesPerLine)
+        .contains(
+            Map.entry(
+                "55",
+                List.of(
+                    anArrivalTime().minutesUntilArrival(3).build(),
+                    anArrivalTime().minutesUntilArrival(21).build(),
+                    anArrivalTime().minutesUntilArrival(30).build())));
+  }
+
+  private Trip aBusTrip() {
+    return Trip.builder()
+        .startingPoint(aTransportStation().stationId("490001044N").build())
+        .line("55")
+        .direction("Liverpool Street Or Old Street")
+        .build();
+  }
+
+  private ArrivalTime.ArrivalTimeBuilder anArrivalTime() {
+    return ArrivalTime.builder().destinationName("Liverpool Street Or Old Street");
+  }
+
   static class TflClientStub implements TflClient {
     @Override
     public List<Departure> departures(
@@ -55,8 +86,19 @@ class ArrivalTimeClientTest {
     }
 
     @Override
-    public Map<String, List<ArrivalTime>> arrivals(String stopId) {
-      return Map.of();
+    public Map<String, List<Arrival>> arrivals(String stopId) {
+      Arrival arrival55_01 = Arrival.of("Liverpool Street Or Old Street", 1309);
+      Arrival arrival55_02 = Arrival.of("Liverpool Street Or Old Street", 1815);
+      Arrival arrival55_03 = Arrival.of("Liverpool Street Or Old Street", 220);
+
+      Arrival arrival26_01 = Arrival.of("Liverpool Street Or Old Street", 1013);
+      Arrival arrival26_02 = Arrival.of("Liverpool Street Or Old Street", 632);
+      Arrival arrival26_03 = Arrival.of("Liverpool Street Or Old Street", 1463);
+      Arrival arrival26_04 = Arrival.of("Liverpool Street Or Old Street", 475);
+
+      return Map.of(
+          "55", List.of(arrival55_01, arrival55_02, arrival55_03),
+          "26", List.of(arrival26_01, arrival26_02, arrival26_03, arrival26_04));
     }
   }
 }

@@ -10,6 +10,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.*;
 import java.net.http.*;
+import java.nio.file.Path;
 import java.util.List;
 import java.util.Map;
 
@@ -54,8 +55,18 @@ public class InMemoryConfiguration {
 
       private Map<Journey.JourneyId, Journey> getJourneys() {
         String url = "https://verdant-blini-222724.netlify.app/journeys.json";
-        return JourneyReader.readValue(getFileContent(url));
+        Path path = Path.of("/home/florent/Documents/bonus/journeys.json");
+        InputStream inputStream = getInputStream(path);
+        return JourneyReader.readValue(inputStream);
       }
     };
+  }
+
+  private InputStream getInputStream(Path path)  {
+      try {
+          return path.toUri().toURL().openStream();
+      } catch (IOException e) {
+          throw new RuntimeException(e);
+      }
   }
 }
