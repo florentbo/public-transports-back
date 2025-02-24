@@ -50,7 +50,7 @@ public class Mapper {
     log.debug("Expected arrival time: {}", expectedArrivalTime);
     int minutesBetween = (int) MINUTES.between(now, expectedArrivalTime);
     return ArrivalTime.builder()
-        .destinationName(passingTime.destination().fr())
+        .direction(passingTime.destination().fr())
         .minutesUntilArrival(minutesBetween + 1)
         .build();
   }

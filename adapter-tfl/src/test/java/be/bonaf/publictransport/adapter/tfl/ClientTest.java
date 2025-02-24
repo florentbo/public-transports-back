@@ -40,14 +40,14 @@ class ClientTest {
 
     TflClient tflClient = new TflConnector(wm.getHttpBaseUrl());
     Map<String, List<Arrival>> arrivals = tflClient.arrivals("490001044N");
-    Arrival arrival55_01 = Arrival.of("Liverpool Street Or Old Street", 1309);
-    Arrival arrival55_02 = Arrival.of("Liverpool Street Or Old Street", 1815);
-    Arrival arrival55_03 = Arrival.of("Liverpool Street Or Old Street", 220);
+    Arrival arrival55_01 = Arrival.of("outbound", 1309);
+    Arrival arrival55_02 = Arrival.of("outbound", 1815);
+    Arrival arrival55_03 = Arrival.of("outbound", 220);
 
-    Arrival arrival26_01 = Arrival.of("Liverpool Street Or Old Street", 1013);
-    Arrival arrival26_02 = Arrival.of("Liverpool Street Or Old Street", 632);
-    Arrival arrival26_03 = Arrival.of("Liverpool Street Or Old Street", 1463);
-    Arrival arrival26_04 = Arrival.of("Liverpool Street Or Old Street", 475);
+    Arrival arrival26_01 = Arrival.of("outbound", 1013);
+    Arrival arrival26_02 = Arrival.of("outbound", 632);
+    Arrival arrival26_03 = Arrival.of("outbound", 1463);
+    Arrival arrival26_04 = Arrival.of("outbound", 475);
 
     assertThat(arrivals).contains(
 

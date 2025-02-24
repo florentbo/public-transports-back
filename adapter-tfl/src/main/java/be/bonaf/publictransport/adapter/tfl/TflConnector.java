@@ -76,12 +76,12 @@ public class TflConnector implements TflClient {
 
   private Function<StopPointArrival, Arrival> toArrival() {
     return stopPointArrival ->
-        Arrival.of(stopPointArrival.towards(), stopPointArrival.secondsToStation());
+        Arrival.of(stopPointArrival.direction(), stopPointArrival.secondsToStation());
   }
 
-  record StopPointArrival(String stopId, String towards, Integer secondsToStation) {
+  record StopPointArrival(String stopId, String direction, Integer secondsToStation) {
     static StopPointArrival from(TflApiPresentationEntitiesPrediction prediction) {
-      return of(prediction.getLineId(), prediction.getTowards(), prediction.getTimeToStation());
+      return of(prediction.getLineId(), prediction.getDirection(), prediction.getTimeToStation());
     }
 
     static StopPointArrival of(String stopId, String towards, Integer secondsToStation) {

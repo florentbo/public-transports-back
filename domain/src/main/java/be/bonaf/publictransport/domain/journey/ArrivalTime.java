@@ -7,7 +7,7 @@ import java.time.Instant;
 @Builder
 public record ArrivalTime(
     String platformName,
-    String destinationName,
+    String direction,
     int minutesUntilArrival,
     ArrivalStatus status) {
   public enum ArrivalStatus {

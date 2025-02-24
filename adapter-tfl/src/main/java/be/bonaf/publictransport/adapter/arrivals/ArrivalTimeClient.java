@@ -1,21 +1,19 @@
 package be.bonaf.publictransport.adapter.arrivals;
 
+import static java.util.stream.Collectors.*;
+
 import be.bonaf.publictransport.adapter.tfl.Arrival;
-import be.bonaf.publictransport.domain.schedule.Departure;
 import be.bonaf.publictransport.adapter.tfl.TflClient;
 import be.bonaf.publictransport.domain.journey.ArrivalTime;
 import be.bonaf.publictransport.domain.journey.ArrivalTimeService;
 import be.bonaf.publictransport.domain.journey.Journey;
-import lombok.AllArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
-
+import be.bonaf.publictransport.domain.schedule.Departure;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Predicate;
-import java.util.stream.Collectors;
-
-import static java.util.stream.Collectors.*;
+import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 @AllArgsConstructor
 @Slf4j
@@ -50,7 +48,7 @@ public class ArrivalTimeClient implements ArrivalTimeService {
     public static ArrivalTime from(Departure departure) {
       return ArrivalTime.builder()
           .platformName(departure.platformName())
-          .destinationName(departure.destinationName())
+          .direction(departure.destinationName())
           .minutesUntilArrival(departure.minutesAndSecondsToArrival().getMinute())
           .build();
     }
@@ -68,13 +66,14 @@ public class ArrivalTimeClient implements ArrivalTimeService {
     List<Arrival> arrivals = arrivalsPerLine.get(trip.line());
     return arrivals.stream()
         .map(this::toArrivalTime)
+        .filter(arrival -> arrival.direction().equals(trip.direction()))
         .sorted(Comparator.comparing(ArrivalTime::minutesUntilArrival))
         .toList();
   }
 
   private ArrivalTime toArrivalTime(Arrival arrival) {
     return ArrivalTime.builder()
-        .destinationName(arrival.towards())
+        .direction(arrival.direction())
         .minutesUntilArrival(secondsToMinutes(arrival.secondsToStation()))
         .build();
   }
