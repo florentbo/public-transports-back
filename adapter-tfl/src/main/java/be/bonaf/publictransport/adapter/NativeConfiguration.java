@@ -13,6 +13,7 @@ public class NativeConfiguration implements RuntimeHintsRegistrar {
     public void registerHints(@Nullable RuntimeHints hints, ClassLoader classLoader) {
         List<Class<?>> classes = List.of(
                 TflApiPresentationEntitiesArrivalDeparture.class,
+                TflApiPresentationEntitiesPrediction.class,
                 TflApiPresentationEntitiesPredictionTiming.class);
         registerHints(hints, classes );
     }

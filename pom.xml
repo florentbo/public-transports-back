@@ -13,7 +13,7 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>3.4.2</version>
+        <version>3.4.3</version>
         <relativePath/>
     </parent>
 
@@ -122,7 +122,6 @@
         <maven.compiler.target>${java.version}</maven.compiler.target>
         <revision>1.0.0-SNAPSHOT</revision>
 
-        <spring-boot.version>3.3.5</spring-boot.version>
         <maven-surefire-plugin.version>3.1.2</maven-surefire-plugin.version>
 
         <wiremock.version>3.9.2</wiremock.version>

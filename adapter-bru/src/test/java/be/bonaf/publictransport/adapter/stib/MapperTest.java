@@ -27,9 +27,9 @@ class MapperTest {
     var arrivalDeparture = mapper.from(waitingTimes());
 
     var arrivalTime01 =
-        ArrivalTime.builder().destinationName("FIRST STATION").minutesUntilArrival(2).build();
+        ArrivalTime.builder().direction("FIRST STATION").minutesUntilArrival(2).build();
     var arrivalTime02 =
-        ArrivalTime.builder().destinationName("FIRST STATION").minutesUntilArrival(12).build();
+        ArrivalTime.builder().direction("FIRST STATION").minutesUntilArrival(12).build();
     assertThat(arrivalDeparture).isEqualTo(List.of(arrivalTime01, arrivalTime02));
   }
 
@@ -69,13 +69,13 @@ class MapperTest {
     var mapper = new Mapper(fixedClock);
 
     var arrivalTime01 =
-        ArrivalTime.builder().destinationName("FIRST STATION").minutesUntilArrival(2).build();
+        ArrivalTime.builder().direction("FIRST STATION").minutesUntilArrival(2).build();
     var arrivalTime02 =
-        ArrivalTime.builder().destinationName("FIRST STATION").minutesUntilArrival(12).build();
+        ArrivalTime.builder().direction("FIRST STATION").minutesUntilArrival(12).build();
     var arrivalTime03 =
-        ArrivalTime.builder().destinationName("SECOND STATION").minutesUntilArrival(22).build();
+        ArrivalTime.builder().direction("SECOND STATION").minutesUntilArrival(22).build();
     var arrivalTime04 =
-        ArrivalTime.builder().destinationName("SECOND STATION").minutesUntilArrival(32).build();
+        ArrivalTime.builder().direction("SECOND STATION").minutesUntilArrival(32).build();
     Map<String, List<ArrivalTime>> expected =
         Map.of(
             "6", List.of(arrivalTime01, arrivalTime02),
