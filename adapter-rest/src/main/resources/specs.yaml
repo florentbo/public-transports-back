@@ -1,20 +1,235 @@
 openapi: 3.0.3
 info:
-  title: Public Transport Journey API
+  title: Public Transport Personal Routes API
   description: |
-    API for managing public transport journeys and real-time arrivals.
-    Allows users to create and manage their frequent journeys and get real-time arrival information.
-  version: 1.0.0
+    API for managing personal transport routes and real-time arrivals.
+    Supports both legacy journeys and new personal routes aligned with user-centered transport vision.
+    Personal routes focus on repeated, routine journeys with learning and optimization.
+  version: 2.0.0
   contact:
     name: Public Transport API Team
     email: api@example.com
+
+tags:
+  - name: journeys
+    description: Legacy journeys API (maintained for backward compatibility)
+  - name: personal-routes
+    description: Personal routes API aligned with user-centered transport vision
 
 security:
   - bearerAuth: [ ]
 
 paths:
+  # NEW PERSONAL ROUTES API
+  /routes/personal:
+    get:
+      tags:
+        - personal-routes
+      summary: Get my personal routes
+      description: Returns all personal routes for authenticated user, sorted by usage and favorites
+      operationId: getMyPersonalRoutes
+      parameters:
+        - name: filter
+          in: query
+          required: false
+          schema:
+            type: string
+            enum: [ALL, FAVORITES, DAILY, RECENT, ACTIVE]
+            default: ACTIVE
+          description: Filter routes by type
+        - name: sortBy
+          in: query
+          required: false
+          schema:
+            type: string
+            enum: [MOST_USED, RECENT, NAME, FAVORITE]
+            default: MOST_USED
+          description: Sort order for results
+      responses:
+        '200':
+          description: List of personal routes
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/PersonalRoute'
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+
+    post:
+      tags:
+        - personal-routes
+      summary: Create a personal route
+      description: Creates a new personal route with user-friendly naming and metadata
+      operationId: createPersonalRoute
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PersonalRouteCreate'
+      responses:
+        '201':
+          description: Personal route created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PersonalRoute'
+        '400':
+          description: Invalid input
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+
+  /routes/personal/{routeId}:
+    parameters:
+      - name: routeId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+        description: Personal route identifier
+    
+    get:
+      tags:
+        - personal-routes
+      summary: Get personal route by ID
+      description: Retrieves a specific personal route with full details
+      operationId: getPersonalRouteById
+      responses:
+        '200':
+          description: Personal route found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PersonalRoute'
+        '404':
+          description: Personal route not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+    
+    patch:
+      tags:
+        - personal-routes
+      summary: Update personal route
+      description: Updates metadata and preferences for a personal route
+      operationId: updatePersonalRoute
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PersonalRouteUpdate'
+      responses:
+        '200':
+          description: Personal route updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PersonalRoute'
+        '404':
+          description: Personal route not found
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+    
+    delete:
+      tags:
+        - personal-routes
+      summary: Delete personal route
+      description: Removes a personal route from user's collection
+      operationId: deletePersonalRoute
+      responses:
+        '204':
+          description: Personal route deleted
+        '404':
+          description: Personal route not found
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+
+  /routes/personal/{routeId}/use:
+    post:
+      tags:
+        - personal-routes
+      summary: Record route usage
+      description: Updates statistics when this route is used for a journey
+      operationId: recordRouteUsage
+      parameters:
+        - name: routeId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                actualDuration:
+                  type: integer
+                  description: Actual journey time in minutes
+                  example: 25
+                onTime:
+                  type: boolean
+                  description: Whether arrived on time
+                  example: true
+                satisfaction:
+                  type: integer
+                  minimum: 1
+                  maximum: 5
+                  description: User satisfaction rating (1-5)
+      responses:
+        '200':
+          description: Usage recorded successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PersonalRoute'
+        '404':
+          description: Personal route not found
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+
+  /routes/personal/{routeId}/transport-options:
+    get:
+      tags:
+        - personal-routes
+      summary: Get transport options for personal route
+      description: Get real-time arrival information for this personal route
+      operationId: getPersonalRouteTransportOptions
+      parameters:
+        - name: routeId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: Transport options retrieved
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TransportOptions'
+        '404':
+          description: Personal route not found
+
+  # EXISTING JOURNEYS API (Legacy)
   /journeys:
     post:
+      tags:
+        - journeys
       summary: Create a new journey
       description: Creates a new journey with origin and destination locations
       operationId: createJourney
@@ -41,6 +256,8 @@ paths:
           $ref: '#/components/responses/UnauthorizedError'
 
     get:
+      tags:
+        - journeys
       summary: Get all journeys for current user
       description: Retrieves all journeys associated with the authenticated user
       operationId: getCurrentUserJourneys
@@ -65,6 +282,8 @@ paths:
           type: integer
           format: int64
     get:
+      tags:
+        - journeys
       summary: Get journey by ID
       operationId: getJourneyById
       responses:
@@ -81,6 +300,8 @@ paths:
               schema:
                 $ref: '#/components/schemas/Error'
     delete:
+      tags:
+        - journeys
       summary: Delete journey
       operationId: deleteJourney
       responses:
@@ -98,6 +319,8 @@ paths:
           type: integer
           format: int64
     post:
+      tags:
+        - journeys
       summary: Add a trip to a journey
       operationId: addTripToJourney
       requestBody:
@@ -122,6 +345,8 @@ paths:
 
   /journeys/{journeyId}/transport-options:
     get:
+      tags:
+        - journeys
       summary: Get transport options for a journey
       operationId: getTransportOptions
       parameters:
@@ -143,6 +368,8 @@ paths:
 
   /stations/search:
     get:
+      tags:
+        - journeys
       summary: Search for transport stations
       operationId: searchStations
       parameters:
@@ -184,6 +411,326 @@ components:
             $ref: '#/components/schemas/Error'
 
   schemas:
+    # PERSONAL ROUTES SCHEMAS (New API aligned with vision)
+    PersonalLocation:
+      type: object
+      required:
+        - name
+      properties:
+        name:
+          type: string
+          description: Official location name
+          example: "Gare du Nord"
+        personalName:
+          type: string
+          description: Your personal name for this place
+          example: "Home"
+          maxLength: 50
+        address:
+          type: string
+          description: Full address
+          example: "18 Rue de Dunkerque, 75010 Paris"
+        coordinates:
+          type: object
+          properties:
+            latitude:
+              type: number
+              format: double
+              example: 48.8809
+            longitude:
+              type: number
+              format: double
+              example: 2.3553
+        locationType:
+          type: string
+          enum: [HOME, WORK, FRIEND, GYM, SCHOOL, SHOPPING, RESTAURANT, OTHER]
+          description: Type of personal location for UI grouping
+
+    PersonalRoute:
+      type: object
+      required:
+        - id
+        - routeName
+        - origin
+        - destination
+        - routeType
+      properties:
+        id:
+          type: string
+          format: uuid
+        routeName:
+          type: string
+          description: Your personal name for this route
+          example: "Morning commute"
+          maxLength: 100
+        description:
+          type: string
+          description: Optional description of the route
+          example: "Fastest route to office during rush hour"
+          maxLength: 500
+        origin:
+          $ref: '#/components/schemas/PersonalLocation'
+        destination:
+          $ref: '#/components/schemas/PersonalLocation'
+        routeType:
+          type: string
+          enum: [DAILY_COMMUTE, WEEKLY_ROUTINE, OCCASIONAL, WEEKEND, SPECIAL]
+          description: Type of personal route
+        routeSchedule:
+          type: object
+          properties:
+            preferredDepartureTime:
+              type: string
+              pattern: "^([01]?[0-9]|2[0-3]):[0-5][0-9]$"
+              description: Usual departure time (HH:MM)
+              example: "08:30"
+            preferredArrivalTime:
+              type: string
+              pattern: "^([01]?[0-9]|2[0-3]):[0-5][0-9]$"
+              description: Desired arrival time (HH:MM)
+              example: "09:15"
+            activeDays:
+              type: array
+              items:
+                type: string
+                enum: [MONDAY, TUESDAY, WEDNESDAY, THURSDAY, FRIDAY, SATURDAY, SUNDAY]
+              description: Days when this route is typically used
+            flexibility:
+              type: integer
+              minimum: 0
+              maximum: 60
+              description: Acceptable delay in minutes
+              example: 10
+        metadata:
+          type: object
+          properties:
+            isFavorite:
+              type: boolean
+              default: false
+              description: Favorite route for quick access
+            isActive:
+              type: boolean
+              default: true
+              description: Whether this route is actively used
+            color:
+              type: string
+              pattern: "^#[0-9A-Fa-f]{6}$"
+              description: UI color for this route
+              example: "#FF5733"
+            icon:
+              type: string
+              description: Icon identifier for UI
+              example: "work"
+            tags:
+              type: array
+              items:
+                type: string
+              description: User-defined tags for organization
+              example: ["work", "rush-hour", "metro"]
+        statistics:
+          type: object
+          readOnly: true
+          properties:
+            lastUsed:
+              type: string
+              format: date-time
+              description: Last time this route was used
+            timesUsed:
+              type: integer
+              format: int32
+              default: 0
+              description: Total number of times used
+            averageDuration:
+              type: integer
+              description: Average journey time in minutes
+            averageCost:
+              type: number
+              format: float
+              description: Average cost per journey
+            successRate:
+              type: number
+              format: float
+              minimum: 0
+              maximum: 1
+              description: On-time arrival rate (0.0 to 1.0)
+            reliabilityScore:
+              type: number
+              format: float
+              minimum: 0
+              maximum: 10
+              description: Overall reliability score (0-10)
+            satisfactionRating:
+              type: number
+              format: float
+              minimum: 1
+              maximum: 5
+              description: Average user satisfaction (1-5)
+        transportSegments:
+          type: array
+          items:
+            $ref: '#/components/schemas/TransportSegment'
+          description: Ordered list of transport segments for this route
+        createdAt:
+          type: string
+          format: date-time
+          readOnly: true
+        updatedAt:
+          type: string
+          format: date-time
+          readOnly: true
+
+    TransportSegment:
+      type: object
+      required:
+        - segmentOrder
+        - transportType
+        - startStation
+        - endStation
+      properties:
+        segmentOrder:
+          type: integer
+          description: Order of this segment in the route (1, 2, 3...)
+          minimum: 1
+        transportType:
+          type: string
+          enum: [METRO, BUS, TRAM, TRAIN, WALK, BIKE, CAR]
+          description: Type of transport for this segment
+        line:
+          type: string
+          description: Line number/name
+          example: "Line 4"
+        startStation:
+          $ref: '#/components/schemas/TransportStation'
+        endStation:
+          $ref: '#/components/schemas/TransportStation'
+        estimatedDuration:
+          type: integer
+          description: Expected duration in minutes
+          minimum: 0
+        estimatedCost:
+          type: number
+          format: float
+          description: Cost for this segment
+          minimum: 0
+        platform:
+          type: string
+          description: Preferred platform if known
+          example: "Platform A"
+        direction:
+          type: string
+          description: Direction or terminus station
+          example: "Direction Château de Vincennes"
+        notes:
+          type: string
+          description: Personal notes about this segment
+          example: "Avoid first car during rush hour"
+          maxLength: 200
+
+    PersonalRouteCreate:
+      type: object
+      required:
+        - routeName
+        - origin
+        - destination
+        - routeType
+      properties:
+        routeName:
+          type: string
+          maxLength: 100
+          example: "Morning commute"
+        description:
+          type: string
+          maxLength: 500
+        origin:
+          $ref: '#/components/schemas/PersonalLocation'
+        destination:
+          $ref: '#/components/schemas/PersonalLocation'
+        routeType:
+          type: string
+          enum: [DAILY_COMMUTE, WEEKLY_ROUTINE, OCCASIONAL, WEEKEND, SPECIAL]
+        routeSchedule:
+          type: object
+          properties:
+            preferredDepartureTime:
+              type: string
+              pattern: "^([01]?[0-9]|2[0-3]):[0-5][0-9]$"
+            activeDays:
+              type: array
+              items:
+                type: string
+                enum: [MONDAY, TUESDAY, WEDNESDAY, THURSDAY, FRIDAY, SATURDAY, SUNDAY]
+        metadata:
+          type: object
+          properties:
+            isFavorite:
+              type: boolean
+              default: false
+            color:
+              type: string
+              pattern: "^#[0-9A-Fa-f]{6}$"
+            icon:
+              type: string
+            tags:
+              type: array
+              items:
+                type: string
+        transportSegments:
+          type: array
+          items:
+            $ref: '#/components/schemas/TransportSegment'
+
+    PersonalRouteUpdate:
+      type: object
+      properties:
+        routeName:
+          type: string
+          maxLength: 100
+        description:
+          type: string
+          maxLength: 500
+        routeType:
+          type: string
+          enum: [DAILY_COMMUTE, WEEKLY_ROUTINE, OCCASIONAL, WEEKEND, SPECIAL]
+        routeSchedule:
+          type: object
+          properties:
+            preferredDepartureTime:
+              type: string
+              pattern: "^([01]?[0-9]|2[0-3]):[0-5][0-9]$"
+            preferredArrivalTime:
+              type: string
+              pattern: "^([01]?[0-9]|2[0-3]):[0-5][0-9]$"
+            activeDays:
+              type: array
+              items:
+                type: string
+                enum: [MONDAY, TUESDAY, WEDNESDAY, THURSDAY, FRIDAY, SATURDAY, SUNDAY]
+            flexibility:
+              type: integer
+              minimum: 0
+              maximum: 60
+        metadata:
+          type: object
+          properties:
+            isFavorite:
+              type: boolean
+            isActive:
+              type: boolean
+            color:
+              type: string
+              pattern: "^#[0-9A-Fa-f]{6}$"
+            icon:
+              type: string
+            tags:
+              type: array
+              items:
+                type: string
+        transportSegments:
+          type: array
+          items:
+            $ref: '#/components/schemas/TransportSegment'
+
+    # LEGACY JOURNEYS SCHEMAS (Backward compatibility)
     Location:
       type: object
       required:
