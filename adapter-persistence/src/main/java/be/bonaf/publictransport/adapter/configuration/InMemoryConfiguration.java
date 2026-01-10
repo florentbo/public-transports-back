@@ -53,7 +53,7 @@ public class InMemoryConfiguration {
       }
 
       private Map<Journey.JourneyId, Journey> getJourneys() {
-        String url = "https://verdant-blini-222724.netlify.app/journeys.json";
+        String url = "https://api.jsonbin.io/v3/b/6962de5143b1c97be9279557/latest";
         return JourneyReader.readValue(getFileContent(url));
       }
     };
